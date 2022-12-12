@@ -23,15 +23,15 @@ type search struct {
 }
 
 type edit struct {
-	wantToEdit bool
 	date       string
+	wantToEdit bool
 }
 
 type config struct {
+	displayDate string
 	addNote     note
 	search      search
 	edit        edit
-	displayDate string
 	displayAll  bool
 }
 
