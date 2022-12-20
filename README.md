@@ -79,4 +79,4 @@ $ dn -v 2022
 
 # Setup
 
-Run `go install github.com/GLAD-DEV/dn`
+Run `go install github.com/GLAD-DEV/dn@latest`
