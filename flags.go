@@ -49,19 +49,14 @@ func parseFlags() config {
 	args := flag.Args()
 
 	// Check if more than one flag is set
-	allFlags := []bool{*addDate, *help, *displayToday, *displayDate, *editToday, *editDate, *searchInsensitive, *searchSensitive}
-	flagSet := false
-	for _, item := range allFlags {
-		if item {
-			if flagSet {
-				fmt.Printf("Mutiple flags used\n\n")
-				showHelp()
-				os.Exit(1)
-			}
-
-			flagSet = true
-		}
+	flagCount := flag.NFlag()
+	if flagCount > 0 {
+		fmt.Printf("Mutiple flags used\n\n")
+		showHelp()
+		os.Exit(1)
 	}
+
+	flagSet := flagCount > 0
 
 	if len(args) == 0 && !flagSet {
 		fmt.Printf("No arguments passed\n\n")

@@ -40,7 +40,7 @@ func getBasePath() string {
 			os.Exit(1)
 		}
 
-		// Check if path is
+		// Check if path is valid
 		_, err := os.Stat(homeDir)
 		if err == nil || os.IsNotExist(err) {
 			return homeDir
