@@ -228,7 +228,8 @@ func showHelp() {
 
 	fmt.Println("optional arguments:")
 	fmt.Println("  -h\t\tShow this help message and quit")
-	fmt.Println("  -s\t\tSearch for a string in all notes")
+	fmt.Println("  -s\t\tCase-insensitive search for a string in all notes")
+	fmt.Println("  -S\t\tCase-sensitive search for a string in all notes")
 	fmt.Println("  -o [DATE]\tAdd note dated at [DATE]")
 	fmt.Println("  -t\t\tDisplay today's notes")
 	fmt.Println("  -v [DATE]\tDisplays all notes if no date is passed, otherwise display the notes that match the passed date slug")
