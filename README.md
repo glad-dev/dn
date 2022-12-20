@@ -6,7 +6,10 @@ This tool is a Go implementation of [tomlockwood's dn tool](https://github.com/t
 
 # Usage
 
-`dn` writes a bullet-pointed string to a file with today's date in YYYY-MM-DD format in the `~/dn/` folder.
+`dn` writes a bullet-pointed string to a file with today's date in YYYY-MM-DD format.
+The notes are stored in the `~/dn/` folder if `$DN_HOME` is not set.
+Otherwise, the notes are stored in the folder specified by `$DN_HOME`.
+`$DN_HOME` must be a valid and absolute file path.
 
 `dn -o` does the same, but the first argument is the filename. This can be used for future notes i.e. `dn -o 2030-10-01 "I died"`.
 
