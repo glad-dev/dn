@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
 )
 
-func searchNotes(searchInstance *search) {
-	basePath := getBasePath()
+func searchNotes(searchInstance *search, basePath string) {
 	files, err := ioutil.ReadDir(basePath)
 	if err != nil {
 		fmt.Printf("Error: Reading the base directory failed: %s\n", err)
@@ -23,7 +22,7 @@ func searchNotes(searchInstance *search) {
 			continue
 		}
 
-		contentByte, err := os.ReadFile(path.Join(basePath, file.Name()))
+		contentByte, err := os.ReadFile(filepath.Join(basePath, file.Name()))
 		if err != nil {
 			fmt.Printf("Warning: Reading the content of %s failed: %s\n", file.Name(), err)
 			fmt.Print("Skipped file\n\n")

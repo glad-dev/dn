@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"path"
+	"path/filepath"
 )
 
-func editNote(fileName string) {
-	filePath := path.Join(getBasePath(), fileName)
+func editNote(fileName string, basePath string) {
+	filePath := filepath.Join(basePath, fileName)
 
 	// Check if file exists
 	f, err := os.Open(filePath)

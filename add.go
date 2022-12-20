@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 )
 
-func addNote(noteInstance *note) {
-	fullPath := path.Join(getBasePath(), noteInstance.date)
+func addNote(noteInstance *note, basePath string) {
+	fullPath := filepath.Join(basePath, noteInstance.date)
 	file, err := os.OpenFile(fullPath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
 	defer file.Close()
 

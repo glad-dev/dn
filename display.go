@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
 )
 
-func displayNotes(slug string) {
-	basePath := getBasePath()
+func displayNotes(slug string, basePath string) {
 	files, err := ioutil.ReadDir(basePath)
 	if err != nil {
 		fmt.Printf("Error: Reading the base directory failed: %s\n", err)
@@ -28,7 +27,7 @@ func displayNotes(slug string) {
 			continue
 		}
 
-		content, err := os.ReadFile(path.Join(basePath, file.Name()))
+		content, err := os.ReadFile(filepath.Join(basePath, file.Name()))
 		if err != nil {
 			fmt.Printf("Warning: Reading the content of %s failed: %s\n", file.Name(), err)
 			fmt.Print("Skipped file\n\n")
