@@ -50,7 +50,7 @@ func parseFlags() config {
 
 	// Check if more than one flag is set
 	flagCount := flag.NFlag()
-	if flagCount > 0 {
+	if flagCount > 1 {
 		fmt.Printf("Mutiple flags used\n\n")
 		showHelp()
 		os.Exit(1)
