@@ -10,6 +10,7 @@ import (
 
 const (
 	dateFormat = "2006-01-02"
+	version    = "1.2"
 )
 
 type note struct {
@@ -44,6 +45,7 @@ func parseFlags() config {
 	searchSensitive := flag.Bool("S", false, "Case-sensitive search in all notes")
 	editToday := flag.Bool("et", false, "Edit today's note in vim")
 	editDate := flag.Bool("e", false, "Edit note with passed date in vim. If no date is passed, vim's file selection is opened")
+	showVersion := flag.Bool("V", false, "Displays the tool's version")
 
 	flag.Parse()
 	args := flag.Args()
@@ -54,6 +56,11 @@ func parseFlags() config {
 		fmt.Printf("Mutiple flags used\n\n")
 		showHelp()
 		os.Exit(1)
+	}
+
+	if *showVersion {
+		fmt.Printf("dn %s\n", version)
+		os.Exit(0)
 	}
 
 	flagSet := flagCount > 0
@@ -219,7 +226,7 @@ func parseFlags() config {
 }
 
 func showHelp() {
-	fmt.Printf("usage: dn [-h] [-s] [-o] [-t] [-v] [-e] [-et] {content}\n\n")
+	fmt.Printf("usage: dn [-h] [-s] [-S] [-o] [-t] [-v] [-V] [-e] [-et] {content}\n\n")
 
 	fmt.Println("optional arguments:")
 	fmt.Println("  -h\t\tShow this help message and quit")
@@ -228,6 +235,7 @@ func showHelp() {
 	fmt.Println("  -o [DATE]\tAdd note dated at [DATE]")
 	fmt.Println("  -t\t\tDisplay today's notes")
 	fmt.Println("  -v [DATE]\tDisplays all notes if no date is passed, otherwise display the notes that match the passed date slug")
+	fmt.Println("  -V\t\tDisplays the tool's version")
 	fmt.Println("  -e [DATE]\tIf no date is passed, vim's file selection is opened. Otherwise the corresponding note is opened in vim")
 	fmt.Println("  -et\t\tEdit today's note in vim")
 }
