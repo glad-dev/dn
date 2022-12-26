@@ -7,9 +7,7 @@ import (
 )
 
 func main() {
-	conf := parseFlags()
 	basePath := getBasePath()
-
 	// Creates the note directory if it does not yet exist
 	err := os.Mkdir(basePath, 0755)
 	if err != nil && !os.IsExist(err) {
@@ -17,17 +15,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if conf.displayAll {
-		displayNotes("", basePath)
-	} else if len(conf.displayDate) > 0 {
-		displayNotes(conf.displayDate, basePath)
-	} else if conf.edit.wantToEdit {
-		editNote(conf.edit.date, basePath)
-	} else if len(conf.search.needle) > 0 {
-		searchNotes(&conf.search, basePath)
-	} else {
-		addNote(&conf.addNote, basePath)
-	}
+	os.Exit(parseArguments(basePath))
 }
 
 func getBasePath() string {
