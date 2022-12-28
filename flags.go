@@ -15,19 +15,10 @@ const (
 func parseArguments(basePath string) int {
 	help := flag.Bool("h", false, "Show help")
 	helpLong := flag.Bool("help", false, "Show help")
-	versionFlag := flag.Bool("v", false, "Displays the tool's version")
+	versionFlag := flag.Bool("V", false, "Displays the tool's version")
 	versionFlagLong := flag.Bool("version", false, "Displays the tool's version")
 
 	flag.Parse()
-	args := flag.Args()
-
-	// Check if more than one flag is set
-	flagCount := flag.NFlag()
-	if flagCount > 1 {
-		fmt.Printf("Mutiple flags used\n\n")
-		showHelp()
-		return exitFailure
-	}
 
 	if *versionFlag || *versionFlagLong {
 		fmt.Printf("dn %s\n", version)
@@ -37,6 +28,7 @@ func parseArguments(basePath string) int {
 		return exitSuccess
 	}
 
+	args := flag.Args()
 	if len(args) == 0 {
 		fmt.Print("No arguments passed\n\n")
 		showHelp()
@@ -47,11 +39,11 @@ func parseArguments(basePath string) int {
 }
 
 func showHelp() {
-	fmt.Print("usage: dn [-h] [-v] {add, search, sensitiveSeach, ...}\n\n")
+	fmt.Print("usage: dn [-h] [-V] {add, search, sensitiveSeach, ...}\n\n")
 
 	fmt.Println("optional arguments:")
 	fmt.Println("  -h\t\tShow this help message and quit")
-	fmt.Println("  -v\t\tDisplays the tool's version\n")
+	fmt.Println("  -V\t\tDisplays the tool's version\n")
 
 	fmt.Println("modes:")
 	fmt.Println("  add (a)\t\tAdds note with today's date. Can be omitted if note is longer than three chars")
