@@ -171,8 +171,8 @@ func parseModes(args []string, basePath string) int {
 		// Since modes have at most two letters, anything more than three letters is most likely a note
 		if len(mode) < 3 {
 			// Most likely a mistyped mode
-			fmt.Printf("Unknown mode passed %s\n\n", mode)
-			showHelp()
+			fmt.Printf("Error: '%s' is not a valid mode\n", mode)
+			fmt.Printf("Arguments with less than three letters are interpreted as modes. To add a short note, use 'dn -a \"%s\"'\n", mode)
 			return exitFailure
 		}
 
