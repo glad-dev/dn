@@ -11,19 +11,29 @@ The notes are stored in the `~/dn/` folder if `$DN_HOME` is not set.
 Otherwise, the notes are stored in the folder specified by `$DN_HOME`.
 `$DN_HOME` must be a valid and absolute file path.
 
-`dn o` does the same, but the first argument is the filename. This can be used for future notes i.e. `dn o 2030-10-01 "I died"`.
+`dn o`
+does the same, but the first argument is the filename.
+This can be used for future notes i.e. `dn o 2030-10-01 "I died"`.
 
-`dn t` displays today's notes.
+`dn t`
+displays today's notes.
 
-`dn v` displays all files, or when an argument like `2022-12` is passed, `~/dn/2022-12*`.
+`dn v`
+displays all files, or when an argument like `2022-12` is passed, `~/dn/2022-12*`.
 
-`dn s` case-insensitive search for the first argument in all notes 
+`dn s`
+case-insensitive search for the first argument in all notes 
 
-`dn S` does the same, but case-sensitive
+`dn S`
+does the same, but case-sensitive
 
-`dn et` edit today's notes in vim.
+`dn et`
+edit today's notes in vim.
 
-`dn e` edit a note in vim for a given date. i.e. `dn e 2022-12-12`. If no date is passed i.e. `dn e` then a file selection prompt appears in vim.
+`dn e`
+opens the note in $EDITOR for a given date, i.e. `dn e 2022-12-12`.
+If no date is passed then the editor's file selection prompt is shown. 
+If the environment variable $EDITOR is not defined or empty, vim is used.
 
 # Example
 
