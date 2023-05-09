@@ -2,23 +2,24 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
-func searchNotes(searchInstance *search, basePath string) {
-	files, err := ioutil.ReadDir(basePath)
+func searchNotes(searchInstance *search, basePath string) int {
+	files, err := os.ReadDir(basePath)
 	if err != nil {
 		fmt.Printf("Error: Reading the base directory failed: %s\n", err)
-		os.Exit(1)
+
+		return exitFailure
 	}
 
 	out := ""
 	for _, file := range files {
 		if file.IsDir() {
 			fmt.Printf("Warning: Encountered a directory: %s\n", file.Name())
+
 			continue
 		}
 
@@ -36,10 +37,12 @@ func searchNotes(searchInstance *search, basePath string) {
 	}
 
 	if len(out) == 0 {
-		os.Exit(1)
+		return exitFailure
 	}
 
 	fmt.Println(strings.TrimSpace(out))
+
+	return exitSuccess
 }
 
 func sensitiveSearch(fileName string, content string, searchInstance *search) string {

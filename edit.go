@@ -7,16 +7,17 @@ import (
 	"path/filepath"
 )
 
-func editNote(fileName string, basePath string) {
+func editNote(fileName string, basePath string) int {
 	filePath := filepath.Join(basePath, fileName)
 
 	// Check if file exists
 	f, err := os.Open(filePath)
-	f.Close()
 	if os.IsNotExist(err) {
 		fmt.Printf("Error: No note dated %s exists\n", fileName)
-		os.Exit(1)
+
+		return exitFailure
 	}
+	_ = f.Close()
 
 	cmd := exec.Command("vim", filePath)
 	cmd.Stdin = os.Stdin
@@ -24,6 +25,9 @@ func editNote(fileName string, basePath string) {
 	err = cmd.Run()
 	if err != nil {
 		fmt.Printf("Error: Running vim failed: %s\n", err)
-		os.Exit(1)
+
+		return exitFailure
 	}
+
+	return exitSuccess
 }

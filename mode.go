@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"strings"
 	"time"
 )
@@ -17,11 +16,12 @@ type search struct {
 	caseSensitive bool
 }
 
-// returns exit code
+// returns exit code.
 func parseModes(args []string, basePath string) int {
 	if len(args) == 0 {
 		fmt.Print("No arguments passed\n\n")
 		showHelp()
+
 		return exitFailure
 	}
 
@@ -35,86 +35,91 @@ func parseModes(args []string, basePath string) int {
 	case "add":
 		if len(args) == 0 {
 			fmt.Printf("Error: Not enough arguments passed\nUsage: dn %s {CONTENT}\n", mode)
+
 			return exitFailure
 		} else if len(args) > 1 {
 			fmt.Printf("Error: Too many arguments passed\nUsage: dn %s {CONTENT}\n", mode)
+
 			return exitFailure
 		}
 
-		addNote(&note{
+		return addNote(&note{
 			content: args[0],
 			date:    time.Now().Format(dateFormat),
 		}, basePath)
 
-		return exitSuccess
 	case "s":
 		fallthrough
 	case "search":
 		if len(args) == 0 {
 			fmt.Printf("Error: Not enough arguments passed\nUsage: dn %s {SEARCH_STR}\n", mode)
-			os.Exit(1)
+
+			return exitFailure
 		} else if len(args) > 1 {
 			fmt.Printf("Error: Too many arguments passed\nUsage: dn %s {SEARCH_STR}\n", mode)
-			os.Exit(1)
+
+			return exitFailure
 		}
 
-		searchNotes(&search{
+		return searchNotes(&search{
 			needle:        strings.ToLower(args[0]),
 			caseSensitive: false,
 		}, basePath)
 
-		return exitSuccess
 	case "S":
 		fallthrough
 	case "sensitiveSearch":
 		if len(args) == 0 {
 			fmt.Printf("Error: Not enough arguments passed\nUsage: dn %s {SEARCH_STR}\n", mode)
+
 			return exitFailure
 		} else if len(args) > 1 {
 			fmt.Printf("Error: Too many arguments passed\nUsage: dn %s {SEARCH_STR}\n", mode)
+
 			return exitFailure
 		}
 
-		searchNotes(&search{
+		return searchNotes(&search{
 			needle:        args[0],
 			caseSensitive: true,
 		}, basePath)
 
-		return exitSuccess
 	case "o":
 		fallthrough
 	case "on":
 		if len(args) < 2 {
 			fmt.Printf("Error: Not enough arguments passed\nUsage: dn %s {DATE} {CONTENT}\n", mode)
+
 			return exitFailure
 		} else if len(args) > 2 {
 			fmt.Printf("Error: Too many arguments passed\nUsage: dn %s {DATE} {CONTENT}\n", mode)
+
 			return exitFailure
 		}
 
 		date, err := parseDate(args[0])
 		if err != nil {
 			fmt.Printf("Error: %s\nUsage: dn %s {DATE} {CONTENT}\n", err, mode)
+
 			return exitFailure
 		}
 
-		addNote(&note{
+		return addNote(&note{
 			content: args[1],
 			date:    date,
 		}, basePath)
 
-		return exitSuccess
 	case "t":
 		fallthrough
 	case "today":
 		if len(args) > 0 {
 			fmt.Printf("Error: Too many arguments passed\nUsage: dn %s\n", mode)
+
 			return exitFailure
 		}
 
-		displayNotes(time.Now().Format(dateFormat), basePath)
+		return displayNotes(time.Now().Format(dateFormat), basePath)
 
-		return exitSuccess
 	case "v":
 		fallthrough
 	case "view":
@@ -125,21 +130,26 @@ func parseModes(args []string, basePath string) int {
 			dateSlug := args[0]
 			if !isValidDateSlug(dateSlug) {
 				fmt.Printf("Error: Invalid date slug\nUsage: dn %s [SLUG]\n", mode)
+
 				return exitFailure
 			}
 
 			displayNotes(dateSlug, basePath)
+
 		default:
 			fmt.Printf("Error: Too many arguments passed\nUsage: dn %s [SLUG]\n", mode)
+
 			return exitFailure
 		}
 
 		return exitSuccess
+
 	case "e":
 		fallthrough
 	case "edit":
 		if len(args) > 1 {
 			fmt.Printf("Error: Too many arguments passed\nUsage: dn %s {DATE}\n", mode)
+
 			return exitFailure
 		}
 
@@ -149,23 +159,25 @@ func parseModes(args []string, basePath string) int {
 			dateSlug, err = parseDate(args[0])
 			if err != nil {
 				fmt.Printf("Error: %s\nUsage: dn %s {DATE}\n", err, mode)
+
 				return exitFailure
 			}
 		}
 
-		editNote(dateSlug, basePath)
-		return exitSuccess
+		return editNote(dateSlug, basePath)
+
 	case "et":
 		fallthrough
 	case "editToday":
 		if len(args) > 0 {
 			fmt.Printf("Error: Too many arguments passed\nUsage: dn %s\n", mode)
+
 			return exitFailure
 		}
 
 		// Get today's date in ISO 8601
-		editNote(time.Now().Format(dateFormat), basePath)
-		return exitSuccess
+		return editNote(time.Now().Format(dateFormat), basePath)
+
 	default:
 		// Could either be a mistyped mode or a note
 		// Since modes have at most two letters, anything more than three letters is most likely a note
@@ -173,22 +185,28 @@ func parseModes(args []string, basePath string) int {
 			// Most likely a mistyped mode
 			fmt.Printf("Error: '%s' is not a valid mode\n", mode)
 			fmt.Printf("Arguments with less than three letters are interpreted as modes. To add a short note, use 'dn -a \"%s\"'\n", mode)
+
 			return exitFailure
 		}
 
 		// Most likely a note to be added
 		if len(args) > 0 {
 			fmt.Print("Error: Too many arguments passed\nUsage: dn {NOTE}\n")
+
 			return exitFailure
 		}
 
-		addNote(&note{
+		status := addNote(&note{
 			content: mode,
 			date:    time.Now().Format(dateFormat),
 		}, basePath)
+		if status == exitFailure {
+			return exitFailure
+		}
 
 		fmt.Printf("Added '%s' to today's note\n", mode)
 		fmt.Println("If this was not intended, run `dn et` to edit today's note")
+
 		return exitSuccess
 	}
 }
@@ -218,9 +236,6 @@ func isValidDateSlug(dateStr string) bool {
 
 	// Check for format 2006
 	_, err = time.Parse("2006", dateStr)
-	if err == nil {
-		return true
-	}
 
-	return false
+	return err == nil
 }
