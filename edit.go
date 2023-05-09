@@ -19,7 +19,12 @@ func editNote(fileName string, basePath string) int {
 	}
 	_ = f.Close()
 
-	cmd := exec.Command("vim", filePath)
+	editor, exists := os.LookupEnv("EDITOR")
+	if !exists || len(editor) == 0 {
+		editor = "vim"
+	}
+
+	cmd := exec.Command(editor, filePath)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	err = cmd.Run()
