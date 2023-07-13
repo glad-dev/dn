@@ -28,12 +28,12 @@ case-insensitive search for the first argument in all notes
 does the same, but case-sensitive
 
 `dn et`
-edit today's notes in vim.
+edit today's notes in $EDITOR.
+If the environment variable $EDITOR is not defined or empty, vim is used.
 
 `dn e`
 opens the note in $EDITOR for a given date, i.e. `dn e 2022-12-12`.
-If no date is passed then the editor's file selection prompt is shown. 
-If the environment variable $EDITOR is not defined or empty, vim is used.
+If no date is passed then the editor's file selection prompt is shown.
 
 # Example
 

@@ -7,7 +7,7 @@ import (
 
 const (
 	dateFormat  = "2006-01-02"
-	version     = "1.4"
+	version     = "1.4.1"
 	exitSuccess = 0
 	exitFailure = 1
 )
@@ -42,7 +42,7 @@ func parseArguments(basePath string) int {
 }
 
 func showHelp() {
-	fmt.Print("usage: dn [-h] [-V] {add, search, sensitiveSeach, ...}\n\n")
+	fmt.Print("usage: dn [-h] [-V] {add, search, sensitiveSearch, ...}\n\n")
 
 	fmt.Println("optional arguments:")
 	fmt.Println("  -h\t\tShow this help message and quit")
@@ -56,5 +56,5 @@ func showHelp() {
 	fmt.Println("  today (t)\t\tDisplay today's notes")
 	fmt.Println("  view (v)\t\tIf no date is passed, displays all notes. Otherwise displays notes matching passed date slug")
 	fmt.Println("  edit (e)\t\tIf no date is passed, $EDITOR's file selection is opened. Otherwise the corresponding note is opened in $EDITOR")
-	fmt.Println("  editToday (et)\tEdit today's note in vim")
+	fmt.Println("  editToday (et)\tEdit today's note in $EDITOR")
 }
