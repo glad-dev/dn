@@ -50,12 +50,11 @@ $ dn v
 
 $ dn s po
 2022-11-30:1: * Started working on the port of dn
-2022-11-30:2: * Successfully ported dn           
-2022-12-12:1: * Polished this project   
+2022-11-30:2: * Successfully ported dn
+2022-12-12:1: * Polished this project
 
-$ dn S po
-2022-11-30:1: * Started working on the port of dn
-2022-11-30:2: * Successfully ported dn 
+$ dn s Po
+2022-12-12:1: * Polished this project
 
 $ dn v 2022-11
 2022-11-30
