@@ -22,10 +22,9 @@ displays today's notes.
 displays all files, or when an argument like `2022-12` is passed, `~/dn/2022-12*`.
 
 `dn s`
-case-insensitive search for the first argument in all notes 
-
-`dn S`
-does the same, but case-sensitive
+searches for the first argument in all notes.
+If the argument contains at least one capital letter, the search is case-sensitive.
+Otherwise, it is case-insensitive.
 
 `dn et`
 edit today's notes in $EDITOR.

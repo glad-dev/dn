@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"strings"
 	"time"
+	"unicode"
 )
 
 type note struct {
@@ -61,27 +61,17 @@ func parseModes(args []string, basePath string) int {
 			return exitFailure
 		}
 
-		return searchNotes(&search{
-			needle:        strings.ToLower(args[0]),
-			caseSensitive: false,
-		}, basePath)
-
-	case "S":
-		fallthrough
-	case "sensitiveSearch":
-		if len(args) == 0 {
-			fmt.Printf("Error: Not enough arguments passed\nUsage: dn %s {SEARCH_STR}\n", mode)
-
-			return exitFailure
-		} else if len(args) > 1 {
-			fmt.Printf("Error: Too many arguments passed\nUsage: dn %s {SEARCH_STR}\n", mode)
-
-			return exitFailure
+		caseSensitive := false
+		for _, c := range args[0] {
+			if unicode.IsUpper(c) {
+				caseSensitive = true
+				break
+			}
 		}
 
 		return searchNotes(&search{
 			needle:        args[0],
-			caseSensitive: true,
+			caseSensitive: caseSensitive,
 		}, basePath)
 
 	case "o":
