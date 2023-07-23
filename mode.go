@@ -65,6 +65,7 @@ func parseModes(args []string, basePath string) int {
 		for _, c := range args[0] {
 			if unicode.IsUpper(c) {
 				caseSensitive = true
+
 				break
 			}
 		}
@@ -167,6 +168,31 @@ func parseModes(args []string, basePath string) int {
 
 		// Get today's date in ISO 8601
 		return editNote(time.Now().Format(dateFormat), basePath)
+
+	case "remove":
+		fallthrough
+	case "r":
+		if len(args) == 0 {
+			fmt.Printf("Error: Not enough arguments passed\nUsage: dn %s {DATE}\n", mode)
+
+			return exitFailure
+		} else if len(args) > 1 {
+			fmt.Printf("Error: Too many arguments passed\nUsage: dn %s {DATE}\n", mode)
+
+			return exitFailure
+		}
+
+		t, err := time.Parse("2006-01-02", args[0])
+		if err != nil {
+			t, err = time.Parse("02-01-2006", args[0])
+			if err != nil {
+				fmt.Println("The passed date is incorrectly formatted.\nAvailable formats are YYYY-MM-DD and DD-MM-YYYY")
+
+				return exitFailure
+			}
+		}
+
+		return remove(t.Format(dateFormat), basePath)
 
 	default:
 		// Could either be a mistyped mode or a note

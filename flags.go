@@ -46,7 +46,7 @@ func showHelp() {
 
 	fmt.Println("optional arguments:")
 	fmt.Println("  -h\t\tShow this help message and quit")
-	fmt.Println("  -V\t\tDisplays the tool's version\n") //nolint:govet
+	fmt.Print("  -V\t\tDisplays the tool's version\n\n")
 
 	fmt.Println("modes:")
 	fmt.Println(
@@ -78,5 +78,9 @@ func showHelp() {
 	fmt.Println(
 		"  editToday (et)" +
 			"\tEdit today's note in $EDITOR.",
+	)
+	fmt.Println(
+		"  remove (r)" +
+			"\t\tRemoves the notes from the passed date.",
 	)
 }
