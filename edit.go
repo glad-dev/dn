@@ -34,5 +34,15 @@ func editNote(fileName string, basePath string) int {
 		return exitFailure
 	}
 
+	// Delete note if it contains no content
+	info, err := os.Stat(filePath)
+	if err != nil {
+		return exitSuccess
+	}
+
+	if info.Size() == 0 {
+		return remove(fileName, basePath)
+	}
+
 	return exitSuccess
 }
