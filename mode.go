@@ -2,22 +2,13 @@ package main
 
 import (
 	"fmt"
+	"strings"
 	"time"
 	"unicode"
 )
 
-type note struct {
-	content string
-	date    string
-}
-
-type search struct {
-	needle        string
-	caseSensitive bool
-}
-
 // returns exit code.
-func parseModes(args []string, basePath string) int {
+func parseModes(args []string) int {
 	if len(args) == 0 {
 		fmt.Print("No arguments passed\n\n")
 		showHelp()
@@ -43,10 +34,7 @@ func parseModes(args []string, basePath string) int {
 			return exitFailure
 		}
 
-		return addNote(&note{
-			content: args[0],
-			date:    time.Now().Format(dateFormat),
-		}, basePath)
+		return addNote(args[0], time.Now().Format(dateFormat))
 
 	case "s":
 		fallthrough
@@ -70,10 +58,7 @@ func parseModes(args []string, basePath string) int {
 			}
 		}
 
-		return searchNotes(&search{
-			needle:        args[0],
-			caseSensitive: caseSensitive,
-		}, basePath)
+		return searchNotes(args[0], caseSensitive)
 
 	case "o":
 		fallthrough
@@ -95,10 +80,7 @@ func parseModes(args []string, basePath string) int {
 			return exitFailure
 		}
 
-		return addNote(&note{
-			content: args[1],
-			date:    date,
-		}, basePath)
+		return addNote(args[1], date)
 
 	case "t":
 		fallthrough
@@ -109,14 +91,14 @@ func parseModes(args []string, basePath string) int {
 			return exitFailure
 		}
 
-		return displayNotes(time.Now().Format(dateFormat), basePath)
+		return displayNotes(time.Now().Format(dateFormat))
 
 	case "v":
 		fallthrough
 	case "view":
 		switch len(args) {
 		case 0:
-			displayNotes("", basePath)
+			displayNotes("")
 		case 1:
 			dateSlug := args[0]
 			if !isValidDateSlug(dateSlug) {
@@ -125,7 +107,7 @@ func parseModes(args []string, basePath string) int {
 				return exitFailure
 			}
 
-			displayNotes(dateSlug, basePath)
+			displayNotes(dateSlug)
 
 		default:
 			fmt.Printf("Error: Too many arguments passed\nUsage: dn %s [SLUG]\n", mode)
@@ -155,7 +137,7 @@ func parseModes(args []string, basePath string) int {
 			}
 		}
 
-		return editNote(dateSlug, basePath)
+		return editNote(dateSlug)
 
 	case "et":
 		fallthrough
@@ -167,7 +149,7 @@ func parseModes(args []string, basePath string) int {
 		}
 
 		// Get today's date in ISO 8601
-		return editNote(time.Now().Format(dateFormat), basePath)
+		return editNote(time.Now().Format(dateFormat))
 
 	case "remove":
 		fallthrough
@@ -182,6 +164,8 @@ func parseModes(args []string, basePath string) int {
 			return exitFailure
 		}
 
+		args[0] = strings.ReplaceAll(args[0], ".", "-")
+
 		t, err := time.Parse("2006-01-02", args[0])
 		if err != nil {
 			t, err = time.Parse("02-01-2006", args[0])
@@ -192,7 +176,7 @@ func parseModes(args []string, basePath string) int {
 			}
 		}
 
-		return remove(t.Format(dateFormat), basePath)
+		return remove(t.Format(dateFormat))
 
 	default:
 		// Could either be a mistyped mode or a note
@@ -212,16 +196,16 @@ func parseModes(args []string, basePath string) int {
 			return exitFailure
 		}
 
-		status := addNote(&note{
-			content: mode,
-			date:    time.Now().Format(dateFormat),
-		}, basePath)
+		status := addNote(mode, time.Now().Format(dateFormat))
 		if status == exitFailure {
 			return exitFailure
 		}
 
-		fmt.Printf("Added '%s' to today's note\n", mode)
-		fmt.Println("If this was not intended, run `dn et` to edit today's note")
+		config := loadConfig()
+		if !config.SilentAdd {
+			fmt.Printf("Added '%s' to today's note\n", mode)
+			fmt.Println("If this was not intended, run `dn et` to edit today's note")
+		}
 
 		return exitSuccess
 	}

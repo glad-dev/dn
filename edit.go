@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 )
 
-func editNote(fileName string, basePath string) int {
-	filePath := filepath.Join(basePath, fileName)
+func editNote(fileName string) int {
+	filePath := filepath.Join(getBasePath(), fileName)
 
 	// Check if file exists
 	f, err := os.Open(filePath)
@@ -41,7 +41,7 @@ func editNote(fileName string, basePath string) int {
 	}
 
 	if info.Size() == 0 {
-		return remove(fileName, basePath)
+		return remove(fileName)
 	}
 
 	return exitSuccess

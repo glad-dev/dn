@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 )
 
-func addNote(noteInstance *note, basePath string) int {
-	fullPath := filepath.Join(basePath, noteInstance.date)
+func addNote(content string, date string) int {
+	fullPath := filepath.Join(getBasePath(), date)
 	file, err := os.OpenFile(fullPath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
 	if err != nil {
 		fmt.Printf("Error: Opening the note failed: %s\n", err)
@@ -16,7 +16,7 @@ func addNote(noteInstance *note, basePath string) int {
 	}
 	defer file.Close()
 
-	_, err = file.WriteString(fmt.Sprintf("* %s\n", noteInstance.content))
+	_, err = file.WriteString(fmt.Sprintf("* %s\n", content))
 	if err != nil {
 		fmt.Printf("Error: Writing the note failed: %s\n", err)
 

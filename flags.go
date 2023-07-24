@@ -12,7 +12,7 @@ const (
 	exitFailure = 1
 )
 
-func parseArguments(basePath string) int {
+func parseArguments() int {
 	help := flag.Bool("h", false, "Show help")
 	helpLong := flag.Bool("help", false, "Show help")
 	versionFlag := flag.Bool("V", false, "Displays the tool's version")
@@ -38,7 +38,7 @@ func parseArguments(basePath string) int {
 		return exitFailure
 	}
 
-	return parseModes(args, basePath)
+	return parseModes(args)
 }
 
 func showHelp() {

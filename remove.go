@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 )
 
-func remove(date string, basePath string) int {
-	filePath := filepath.Join(basePath, date)
+func remove(date string) int {
+	filePath := filepath.Join(getBasePath(), date)
 	// Check if file exists
 	info, err := os.Stat(filePath)
 	if os.IsNotExist(err) {

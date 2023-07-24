@@ -15,7 +15,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	os.Exit(parseArguments(basePath))
+	os.Exit(parseArguments())
 }
 
 func getBasePath() string {
