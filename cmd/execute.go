@@ -43,6 +43,9 @@ func handleShortAdd(rootCmd *cobra.Command) bool {
 		commands[i] = cmd.Name() // We can ignore alias since they are shorter than 3 chars
 	}
 
+	// Add the completion command
+	commands = append(commands, "completion")
+
 	// Add flags
 	commands = append(commands, "--help")
 	commands = append(commands, "--version")
