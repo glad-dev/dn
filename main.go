@@ -2,50 +2,71 @@ package main
 
 import (
 	"fmt"
+	"github.com/GLAD-DEV/dn/util"
 	"os"
-	"path/filepath"
+	"time"
+
+	"github.com/GLAD-DEV/dn/cmd"
+	"github.com/GLAD-DEV/dn/config"
+	"github.com/GLAD-DEV/dn/constants"
+	"github.com/GLAD-DEV/dn/note"
 )
 
 func main() {
-	basePath := getBasePath()
-	// Creates the note directory if it does not yet exist
-	err := os.Mkdir(basePath, 0755)
-	if err != nil && !os.IsExist(err) {
-		fmt.Printf("Error: Creating the note directory failed: %s\n", err)
+	err := config.CreateDir()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
 		os.Exit(1)
 	}
 
-	os.Exit(parseArguments())
+	done := handleShortAdd()
+	if done {
+		return
+	}
+
+	_ = cmd.Execute()
 }
 
-func getBasePath() string {
-	homeDir, ok := os.LookupEnv("DN_HOME")
-	if ok && len(homeDir) > 0 {
-		// DN_HOME is set
-		// Check if path is absolute
-		if !filepath.IsAbs(homeDir) {
-			fmt.Printf("ERROR: DN_HOME (%s) is not an absolute path\n", homeDir)
-			os.Exit(1)
-		}
-
-		// Check if path is valid
-		_, err := os.Stat(homeDir)
-		if err == nil || os.IsNotExist(err) {
-			return homeDir
-		}
-
-		// os.Stat failed with an unknown error
-		fmt.Printf("ERROR: DN_HOME is not a valid path: %s\n", err)
-		os.Exit(1)
+// handleShortAdd handles cases like `dn "This is a note"`. Returns whether the program is done.
+func handleShortAdd() bool {
+	// We only care about
+	if len(os.Args) != 2 {
+		return false
 	}
 
-	// No custom home directory is set => default to $HOME/dn/
-	var err error
-	homeDir, err = os.UserHomeDir()
+	// Parameter could be a (mistyped) command or an alias
+	if len(os.Args[1]) <= 3 {
+		return false
+	}
+
+	names := cmd.GetCommandNames()
+	// Add flags
+	names = append(names, "--help")
+	names = append(names, "--version")
+
+	// Ensure that we don't accidentally interpret commands as notes
+	for _, name := range names {
+		if os.Args[1] == name {
+			return false
+		}
+	}
+
+	err := note.Add(os.Args[1], time.Now().Format(constants.DateFormat))
 	if err != nil {
-		fmt.Printf("Error: Determining the home directory failed: %s\n", err)
-		os.Exit(1)
+		util.PrintErrAndExit(err.Error())
 	}
 
-	return filepath.Join(homeDir, "dn")
+	conf, err := config.Load()
+	if err != nil {
+		fmt.Printf("Added '%s' to today's note\n", os.Args[1])
+		fmt.Println("If this was not intended, run `dn et` to edit today's note")
+		fmt.Printf("Failed to read config: %s\n", err)
+	}
+
+	if !conf.SilentAdd {
+		fmt.Printf("Added '%s' to today's note\n", os.Args[1])
+		fmt.Println("If this was not intended, run `dn et` to edit today's note")
+	}
+
+	return true
 }

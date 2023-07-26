@@ -1,20 +1,24 @@
-package main
+package note
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/GLAD-DEV/dn/config"
 )
 
-func searchNotes(needle string, caseSensitive bool) int {
-	base := getBasePath()
-
-	files, err := os.ReadDir(base)
+func Search(needle string, caseSensitive bool) error {
+	path, err := config.BasePath()
 	if err != nil {
-		fmt.Printf("Error: Reading the base directory failed: %s\n", err)
+		return err
+	}
 
-		return exitFailure
+	files, err := os.ReadDir(path)
+	if err != nil {
+		return fmt.Errorf("failed to read directory: %w", err)
 	}
 
 	out := ""
@@ -25,7 +29,7 @@ func searchNotes(needle string, caseSensitive bool) int {
 			continue
 		}
 
-		contentByte, err := os.ReadFile(filepath.Join(base, file.Name()))
+		contentByte, err := os.ReadFile(filepath.Join(path, file.Name()))
 		if err != nil {
 			fmt.Printf("Warning: Reading the content of %s failed: %s\n", file.Name(), err)
 			fmt.Print("Skipped file\n\n")
@@ -39,12 +43,12 @@ func searchNotes(needle string, caseSensitive bool) int {
 	}
 
 	if len(out) == 0 {
-		return exitFailure
+		return errors.New("no match found")
 	}
 
 	fmt.Println(strings.TrimSpace(out))
 
-	return exitSuccess
+	return nil
 }
 
 func sensitiveSearch(fileName string, content string, needle string) string {

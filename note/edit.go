@@ -1,21 +1,26 @@
-package main
+package note
 
 import (
 	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
+
+	"github.com/GLAD-DEV/dn/config"
 )
 
-func editNote(fileName string) int {
-	filePath := filepath.Join(getBasePath(), fileName)
+func Edit(fileName string) error {
+	path, err := config.BasePath()
+	if err != nil {
+		return err
+	}
+
+	filePath := filepath.Join(path, fileName)
 
 	// Check if file exists
 	f, err := os.Open(filePath)
 	if os.IsNotExist(err) {
-		fmt.Printf("Error: No note dated %s exists\n", fileName)
-
-		return exitFailure
+		return fmt.Errorf("no note for the date '%s' exists", fileName)
 	}
 	_ = f.Close()
 
@@ -29,20 +34,19 @@ func editNote(fileName string) int {
 	cmd.Stdout = os.Stdout
 	err = cmd.Run()
 	if err != nil {
-		fmt.Printf("Error: Running vim failed: %s\n", err)
-
-		return exitFailure
+		return fmt.Errorf("failed to run the editor: %w", err)
 	}
 
 	// Delete note if it contains no content
 	info, err := os.Stat(filePath)
 	if err != nil {
-		return exitSuccess
+		// Since this is an optional step, we silently ignore the error.
+		return nil // nolint:nilerr
 	}
 
 	if info.Size() == 0 {
-		return remove(fileName)
+		return Remove(fileName)
 	}
 
-	return exitSuccess
+	return nil
 }
