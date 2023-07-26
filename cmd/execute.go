@@ -1,48 +1,75 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
+	"fmt"
+	"os"
+	"time"
 
+	"github.com/GLAD-DEV/dn/config"
 	"github.com/GLAD-DEV/dn/constants"
+	"github.com/GLAD-DEV/dn/note"
+	"github.com/GLAD-DEV/dn/util"
+
+	"github.com/spf13/cobra"
 )
 
 // Execute parses the command line parameters and starts the program.
 func Execute() error {
 	rootCmd := newRootCmd()
 
-	rootCmd.Commands()[0].Name()
+	done := handleShortAdd(rootCmd)
+	if done {
+		return nil
+	}
 
 	return rootCmd.Execute()
 }
 
-func GetCommandNames() []string {
-	cmds := newRootCmd().Commands()
-	commands := make([]string, len(cmds))
+// handleShortAdd handles cases like `dn "This is a note"`. Returns whether the program is done.
+func handleShortAdd(rootCmd *cobra.Command) bool {
+	// We only care about
+	if len(os.Args) != 2 {
+		return false
+	}
 
-	for i, cmd := range cmds {
+	// Parameter could be a (mistyped) command or an alias
+	if len(os.Args[1]) <= 3 {
+		return false
+	}
+
+	// Get list of commands
+	commands := make([]string, len(rootCmd.Commands()))
+	for i, cmd := range rootCmd.Commands() {
 		commands[i] = cmd.Name() // We can ignore alias since they are shorter than 3 chars
 	}
 
-	return commands
-}
+	// Add flags
+	commands = append(commands, "--help")
+	commands = append(commands, "--version")
 
-func newRootCmd() *cobra.Command {
-	rootCmd := &cobra.Command{
-		Use:     "dn",
-		Version: constants.Version,
+	// Ensure that we don't accidentally interpret commands as notes
+	for _, name := range commands {
+		if os.Args[1] == name {
+			return false
+		}
 	}
 
-	cmdAdd := newCmdAdd()
-	cmdEdit := newCmdEdit()
-	cmdEditToday := newCmdEditToday()
-	cmdOn := newCmdOn()
-	cmdRemove := newCmdRemove()
-	cmdSearch := newCmdSearch()
-	cmdToday := newCmdToday()
-	cmdView := newCmdView()
-	cmdConfig := newCmdConfig()
+	err := note.Add(os.Args[1], time.Now().Format(constants.DateFormat))
+	if err != nil {
+		util.PrintErrAndExit(err.Error())
+	}
 
-	rootCmd.AddCommand(cmdAdd, cmdEdit, cmdEditToday, cmdOn, cmdRemove, cmdSearch, cmdToday, cmdView, cmdConfig)
+	conf, err := config.Load()
+	if err != nil {
+		fmt.Printf("Added '%s' to today's note\n", os.Args[1])
+		fmt.Println("If this was not intended, run `dn et` to edit today's note")
+		fmt.Printf("Failed to read config: %s\n", err)
+	}
 
-	return rootCmd
+	if !conf.SilentAdd {
+		fmt.Printf("Added '%s' to today's note\n", os.Args[1])
+		fmt.Println("If this was not intended, run `dn et` to edit today's note")
+	}
+
+	return true
 }
