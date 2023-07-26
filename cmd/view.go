@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/GLAD-DEV/dn/note"
+
 	"github.com/spf13/cobra"
 )
 

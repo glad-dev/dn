@@ -3,12 +3,11 @@ package cmd
 import (
 	"time"
 
+	"github.com/GLAD-DEV/dn/constants"
+	"github.com/GLAD-DEV/dn/note"
 	"github.com/GLAD-DEV/dn/util"
 
 	"github.com/spf13/cobra"
-
-	"github.com/GLAD-DEV/dn/constants"
-	"github.com/GLAD-DEV/dn/note"
 )
 
 func newCmdToday() *cobra.Command {

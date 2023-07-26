@@ -3,12 +3,11 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/GLAD-DEV/dn/config"
+	"github.com/GLAD-DEV/dn/note"
 	"github.com/GLAD-DEV/dn/util"
 
 	"github.com/spf13/cobra"
-
-	"github.com/GLAD-DEV/dn/config"
-	"github.com/GLAD-DEV/dn/note"
 )
 
 func newCmdRemove() *cobra.Command {
