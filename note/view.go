@@ -26,6 +26,12 @@ func View(slug string) error {
 		return fmt.Errorf("failed to read directory: %w", err)
 	}
 
+	if len(files) == 0 || (len(files) == 1 && files[0].Name() == "config.toml") {
+		fmt.Println("You have no notes.")
+
+		return nil
+	}
+
 	out := ""
 	for _, file := range files {
 		if file.IsDir() {
