@@ -11,8 +11,8 @@ import (
 )
 
 func View(slug string) error {
-	slug = strings.ReplaceAll(slug, ".", "-")
-	if !isValidDateSlug(slug) {
+	slug, isValid := isValidDateSlug(slug)
+	if !isValid {
 		return fmt.Errorf("the passed date slug '%s' is invalid", slug)
 	}
 
@@ -64,34 +64,39 @@ func View(slug string) error {
 	return nil
 }
 
-func isValidDateSlug(dateStr string) bool {
-	if len(dateStr) == 0 {
-		return true
+func isValidDateSlug(slug string) (string, bool) {
+	if len(slug) == 0 {
+		return "", true
 	}
+
+	slug = strings.ReplaceAll(slug, ".", "-")
 
 	// Check for ISO8601
-	_, err := time.Parse("2006-01-02", dateStr)
+	t, err := time.Parse("2006-01-02", slug)
 	if err == nil {
-		return true
+		return t.Format("2006-01-02"), true
 	}
 
-	_, err = time.Parse("2006-01", dateStr)
+	t, err = time.Parse("2006-01", slug)
 	if err == nil {
-		return true
+		return t.Format("2006-01"), true
 	}
 
-	_, err = time.Parse("2006", dateStr)
+	t, err = time.Parse("2006", slug)
 	if err == nil {
-		return true
+		return t.Format("2006-01"), true
 	}
 
 	// Check for dates like 01.02.2003
-	_, err = time.Parse("02-01-2006", dateStr)
+	t, err = time.Parse("02-01-2006", slug)
 	if err == nil {
-		return true
+		return t.Format("2006-01-02"), true
 	}
 
-	_, err = time.Parse("01-2006", dateStr)
+	t, err = time.Parse("01-2006", slug)
+	if err == nil {
+		return t.Format("2006-01"), true
+	}
 
-	return err == nil
+	return "", false
 }
