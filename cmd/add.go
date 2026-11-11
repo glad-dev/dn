@@ -14,7 +14,7 @@ func newCmdAdd() *cobra.Command {
 	return &cobra.Command{
 		Use:     "add [note]",
 		Aliases: []string{"a"},
-		Short:   "Adds note with today's date. Can be omitted if note is longer than three chars.",
+		Short:   "Adds note with today's date. Can be omitted, i. e. `dn \"My note\"`.",
 		Example: "dn add \"This note will be added with today's date\"",
 		Args:    cobra.ExactArgs(1),
 		Run: func(_ *cobra.Command, args []string) {
