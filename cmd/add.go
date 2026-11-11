@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	"fmt"
 	"time"
 
+	"github.com/GLAD-DEV/dn/config"
 	"github.com/GLAD-DEV/dn/constants"
 	"github.com/GLAD-DEV/dn/note"
 	"github.com/GLAD-DEV/dn/util"
@@ -21,6 +23,15 @@ func newCmdAdd() *cobra.Command {
 			err := note.Add(args[0], time.Now().Format(constants.DateFormat))
 			if err != nil {
 				util.PrintErrAndExit(err.Error())
+			}
+
+			conf, err := config.Load()
+			if err != nil {
+				util.PrintErrAndExit(err.Error())
+			}
+
+			if !conf.SilentAdd {
+				fmt.Printf("Added '%s' to today's note\n", args[0])
 			}
 		},
 	}
