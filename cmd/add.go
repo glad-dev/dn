@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	"fmt"
 	"time"
 
+	"github.com/GLAD-DEV/dn/config"
 	"github.com/GLAD-DEV/dn/constants"
 	"github.com/GLAD-DEV/dn/note"
 	"github.com/GLAD-DEV/dn/util"
@@ -14,13 +16,22 @@ func newCmdAdd() *cobra.Command {
 	return &cobra.Command{
 		Use:     "add [note]",
 		Aliases: []string{"a"},
-		Short:   "Adds note with today's date. Can be omitted if note is longer than three chars.",
+		Short:   "Adds note with today's date. Can be omitted, i. e. `dn \"My note\"`.",
 		Example: "dn add \"This note will be added with today's date\"",
 		Args:    cobra.ExactArgs(1),
 		Run: func(_ *cobra.Command, args []string) {
 			err := note.Add(args[0], time.Now().Format(constants.DateFormat))
 			if err != nil {
 				util.PrintErrAndExit(err.Error())
+			}
+
+			conf, err := config.Load()
+			if err != nil {
+				util.PrintErrAndExit(err.Error())
+			}
+
+			if !conf.SilentAdd {
+				fmt.Printf("Added '%s' to today's note\n", args[0])
 			}
 		},
 	}
