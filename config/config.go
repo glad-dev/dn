@@ -56,7 +56,10 @@ func Write(config *Config) error {
 		return fmt.Errorf("failed to open config: %w", err)
 	}
 	defer func(f *os.File) {
-		_ = f.Close()
+		err = f.Close()
+		if err != nil {
+			fmt.Printf("Failed to save config: %s\n", err.Error())
+		}
 	}(f)
 
 	_, err = f.Write(buf.Bytes())

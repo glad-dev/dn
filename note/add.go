@@ -24,7 +24,10 @@ func Add(content string, date string) error {
 		return fmt.Errorf("failed to open note: %w", err)
 	}
 	defer func(file *os.File) {
-		_ = file.Close()
+		err = file.Close()
+		if err != nil {
+			fmt.Printf("failed to close note: %s\n", err.Error())
+		}
 	}(file)
 
 	_, err = fmt.Fprintf(file, "* %s\n", content)
