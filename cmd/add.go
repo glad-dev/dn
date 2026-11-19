@@ -27,7 +27,10 @@ func newCmdAdd() *cobra.Command {
 
 			conf, err := config.Load()
 			if err != nil {
-				util.PrintErrAndExit(err.Error())
+				// The note is already saved, so don't report the command as failed.
+				fmt.Printf("Added '%s' to today's note, but failed to read config: %s\n", args[0], err)
+
+				return
 			}
 
 			if !conf.SilentAdd {
