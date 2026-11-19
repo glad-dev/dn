@@ -20,11 +20,10 @@ func Edit(fileName string) error {
 	// Check if file exists
 	//nolint:gosec
 	// fileName is a formated date or empty.
-	f, err := os.Open(filePath)
+	_, err = os.Open(filePath)
 	if os.IsNotExist(err) {
 		return fmt.Errorf("no note for the date '%s' exists", fileName)
 	}
-	_ = f.Close()
 
 	editor, exists := os.LookupEnv("EDITOR")
 	if !exists || len(editor) == 0 {
