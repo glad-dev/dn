@@ -1,3 +1,4 @@
+// Package note adds, edits, removes, searches and displays notes.
 package note
 
 import (

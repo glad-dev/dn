@@ -1,3 +1,4 @@
+// Package cmd defines dn's command-line interface.
 package cmd
 
 import (

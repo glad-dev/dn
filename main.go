@@ -1,3 +1,4 @@
+// Dn is a minimal command-line tool for taking daily notes based on https://github.com/tomlockwood/dn.
 package main
 
 import (

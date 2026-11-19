@@ -1,3 +1,4 @@
+// Package constants holds values shared across dn.
 package constants
 
 const (

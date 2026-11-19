@@ -1,3 +1,4 @@
+// Package util provides small helpers shared across dn. So far, only PrintErrAndExit.
 package util
 
 import (

@@ -1,3 +1,4 @@
+// Package config loads dn's configuration and resolves its file locations.
 package config
 
 import (
