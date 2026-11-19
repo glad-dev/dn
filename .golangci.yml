@@ -48,6 +48,11 @@ linters:
             - github.com/GLAD-DEV/dn
             - github.com/spf13/cobra
             - github.com/BurntSushi/toml
+  exclusions:
+    rules:
+      # Don't require doc comments on exported identifiers since the program is so small, it just adds clutter.
+      - linters: [ revive ]
+        text: "exported (.+) should have comment"
 
 formatters:
   enable:
