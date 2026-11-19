@@ -1,32 +1,14 @@
+version: "2"
+
 run:
   concurrency: 8
   timeout: 2m
   issues-exit-code: 1
   tests: false
 
-linters-settings:
-  gofmt:
-    simplify: true
-  gosimple:
-    checks: [ "all" ]
-  govet:
-    check-shadowing: true
-    enable-all: true
-  staticcheck:
-    checks: [ "all" ]
-  stylecheck:
-    checks: [ "all" ]
-
 linters:
-  disable-all: false
-  enable-all: false
+  default: standard
   enable:
-    - errcheck
-    - gosimple
-    - govet
-    - ineffassign
-    - typecheck
-    - unused
     - asciicheck
     - bidichk
     - bodyclose
@@ -38,12 +20,9 @@ linters:
     - errname
     - errorlint
     - exhaustive
-    - exportloopref
     - gochecknoinits
     - gocritic
     - godot
-    - gofmt
-    - goimports
     - goprintffuncname
     - gosec
     - nilerr
@@ -56,7 +35,27 @@ linters:
     - unconvert
     - unparam
     - whitespace
-  fast: false
+  settings:
+    govet:
+      enable-all: true
+    staticcheck:
+      checks: [ "all" ]
+    depguard:
+      rules:
+        main:
+          allow:
+            - $gostd
+            - github.com/GLAD-DEV/dn
+            - github.com/spf13/cobra
+            - github.com/BurntSushi/toml
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    gofmt:
+      simplify: true
 
 issues:
   max-issues-per-linter: 0
