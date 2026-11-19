@@ -21,7 +21,7 @@ func Search(needle string, caseSensitive bool) error {
 		return fmt.Errorf("failed to read directory: %w", err)
 	}
 
-	out := ""
+	var out strings.Builder
 	for _, file := range files {
 		if file.IsDir() {
 			fmt.Printf("Warning: Encountered a directory: %s\n", file.Name())
@@ -40,38 +40,43 @@ func Search(needle string, caseSensitive bool) error {
 		}
 
 		if caseSensitive {
-			out += sensitiveSearch(file.Name(), string(contentByte), needle)
+			out.WriteString(sensitiveSearch(file.Name(), string(contentByte), needle))
 		} else {
-			out += insensitiveSearch(file.Name(), string(contentByte), needle)
+			out.WriteString(insensitiveSearch(file.Name(), string(contentByte), needle))
 		}
 	}
 
-	if len(out) == 0 {
+	if out.Len() == 0 {
 		return errors.New("no match found")
 	}
 
-	fmt.Println(strings.TrimSpace(out))
+	fmt.Println(strings.TrimSpace(out.String()))
 
 	return nil
 }
 
 func sensitiveSearch(fileName string, content string, needle string) string {
-	out := ""
+	var out strings.Builder
 	if strings.Contains(content, needle) {
 		// Find out which line contains the needle
 		for i, line := range strings.Split(content, "\n") {
 			if strings.Contains(line, needle) {
 				line = strings.ReplaceAll(line, needle, fmt.Sprintf("\033[0;31m%s\033[0m", needle))
-				out += fmt.Sprintf("%s:%d: %s\n", fileName, i+1, line)
+				_, err := fmt.Fprintf(&out, "%s:%d: %s\n", fileName, i+1, line)
+				if err != nil {
+					fmt.Printf("Warning: Failed to show match in %s on line %d: %s\n", fileName, i+1, err)
+
+					continue
+				}
 			}
 		}
 	}
 
-	return out
+	return out.String()
 }
 
 func insensitiveSearch(fileName string, content string, needle string) string {
-	out := ""
+	var out strings.Builder
 	if strings.Contains(strings.ToLower(content), needle) {
 		// Find out which line contains the needle
 		for i, line := range strings.Split(content, "\n") {
@@ -81,10 +86,15 @@ func insensitiveSearch(fileName string, content string, needle string) string {
 				toReplace := line[index : index+len(needle)]
 
 				line = strings.ReplaceAll(line, toReplace, fmt.Sprintf("\033[0;31m%s\033[0m", toReplace))
-				out += fmt.Sprintf("%s:%d: %s\n", fileName, i+1, line)
+				_, err := fmt.Fprintf(&out, "%s:%d: %s\n", fileName, i+1, line)
+				if err != nil {
+					fmt.Printf("Warning: Failed to show match in %s on line %d: %s\n", fileName, i+1, err)
+
+					continue
+				}
 			}
 		}
 	}
 
-	return out
+	return out.String()
 }

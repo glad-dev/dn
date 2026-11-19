@@ -32,7 +32,7 @@ func View(slug string) error {
 		return nil
 	}
 
-	out := ""
+	var out strings.Builder
 	for _, file := range files {
 		if file.IsDir() {
 			fmt.Printf("Warning: Encountered a directory: %s\n", file.Name())
@@ -56,20 +56,17 @@ func View(slug string) error {
 		}
 
 		// Add space before every bullet point
-		split := strings.Split(string(content), "\n")
-		for i, str := range split {
-			split[i] = " " + str
-		}
-
-		out += strings.TrimSpace(fmt.Sprintf("%s\n%s", file.Name(), strings.Join(split, "\n"))) + "\n"
+		entry := file.Name() + "\n " + strings.ReplaceAll(string(content), "\n", "\n ")
+		out.WriteString(strings.TrimSpace(entry))
+		out.WriteString("\n")
 	}
 
-	out = strings.TrimSpace(out)
-	if len(out) == 0 {
+	result := strings.TrimSpace(out.String())
+	if len(result) == 0 {
 		return fmt.Errorf("no matching note found for date %s", slug)
 	}
 
-	fmt.Println(out)
+	fmt.Println(result)
 
 	return nil
 }
