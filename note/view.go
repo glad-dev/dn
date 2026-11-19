@@ -51,6 +51,8 @@ func View(slug string) error {
 		if err != nil {
 			fmt.Printf("Warning: Reading the content of %s failed: %s\n", file.Name(), err)
 			fmt.Print("Skipped file\n\n")
+
+			continue
 		}
 
 		// Add space before every bullet point
