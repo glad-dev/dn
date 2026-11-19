@@ -65,7 +65,7 @@ func View(slug string) error {
 		return fmt.Errorf("no matching note found for date %s", slug)
 	}
 
-	fmt.Print(out)
+	fmt.Println(out)
 
 	return nil
 }
