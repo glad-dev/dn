@@ -20,9 +20,13 @@ func Edit(fileName string) error {
 	// Check if file exists
 	//nolint:gosec
 	// fileName is a formated date or empty.
-	_, err = os.Open(filePath)
-	if os.IsNotExist(err) {
-		return fmt.Errorf("no note for the date '%s' exists", fileName)
+	_, err = os.Stat(filePath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Errorf("no note for the date '%s' exists", fileName)
+		}
+
+		return fmt.Errorf("failed to access note: %w", err)
 	}
 
 	editor, exists := os.LookupEnv("EDITOR")
@@ -44,7 +48,7 @@ func Edit(fileName string) error {
 	info, err := os.Stat(filePath)
 	if err != nil {
 		// Since this is an optional step, we silently ignore the error.
-		return nil // nolint:nilerr
+		return nil //nolint:nilerr
 	}
 
 	if info.Size() == 0 {
