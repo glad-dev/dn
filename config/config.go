@@ -31,6 +31,8 @@ func Load() (*Config, error) {
 				SilentRemove: false,
 			}, nil
 		}
+
+		return nil, err
 	}
 
 	return &config, nil
