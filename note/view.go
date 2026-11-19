@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/GLAD-DEV/dn/config"
+	"github.com/GLAD-DEV/dn/constants"
 )
 
 func View(slug string) error {
@@ -26,7 +27,7 @@ func View(slug string) error {
 		return fmt.Errorf("failed to read directory: %w", err)
 	}
 
-	if len(files) == 0 || (len(files) == 1 && files[0].Name() == "config.toml") {
+	if len(files) == 0 || (len(files) == 1 && files[0].Name() == constants.ConfigName) {
 		fmt.Println("You have no notes.")
 
 		return nil
@@ -41,7 +42,7 @@ func View(slug string) error {
 		}
 
 		// All files have a prefix of ""
-		if !strings.HasPrefix(file.Name(), slug) || file.Name() == "config.toml" {
+		if !strings.HasPrefix(file.Name(), slug) || file.Name() == constants.ConfigName {
 			continue
 		}
 

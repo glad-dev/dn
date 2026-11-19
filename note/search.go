@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/GLAD-DEV/dn/config"
+	"github.com/GLAD-DEV/dn/constants"
 )
 
 func Search(needle string, caseSensitive bool) error {
@@ -36,7 +37,7 @@ func Search(needle string, caseSensitive bool) error {
 			continue
 		}
 
-		if file.Name() == "config.toml" {
+		if file.Name() == constants.ConfigName {
 			continue
 		}
 

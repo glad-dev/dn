@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/GLAD-DEV/dn/constants"
 )
 
 func CreateDir() error {
@@ -27,7 +29,7 @@ func BasePath() (string, error) {
 		// DN_HOME is set
 		// Check if path is absolute
 		if !filepath.IsAbs(homeDir) {
-			return "", fmt.Errorf("$DN_HOME (%s) is not an absoulte path", homeDir)
+			return "", fmt.Errorf("$DN_HOME (%s) is not an absolute path", homeDir)
 		}
 
 		// Check if path is valid
@@ -56,5 +58,5 @@ func configPath() (string, error) {
 		return "", err
 	}
 
-	return filepath.Join(base, "config.toml"), nil
+	return filepath.Join(base, constants.ConfigName), nil
 }
