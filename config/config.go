@@ -49,15 +49,19 @@ func Write(config *Config) error {
 	}
 
 	// Delete the old config
+	//nolint:gosec
+	// Fixed file in the user's own dn directory.
 	f, err := os.OpenFile(configLocation, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0o600)
 	if err != nil {
 		return fmt.Errorf("failed to open config: %w", err)
 	}
-	defer f.Close()
+	defer func(f *os.File) {
+		_ = f.Close()
+	}(f)
 
 	_, err = f.Write(buf.Bytes())
 	if err != nil {
-		return fmt.Errorf("Failed to write config: %w", err)
+		return fmt.Errorf("failed to write config: %w", err)
 	}
 
 	return nil

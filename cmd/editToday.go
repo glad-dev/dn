@@ -17,7 +17,7 @@ func newCmdEditToday() *cobra.Command {
 		Short:   "Edit today's note in $EDITOR.",
 		Example: "dn editToday",
 		Args:    cobra.ExactArgs(0),
-		Run: func(_ *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, _ []string) {
 			err := note.Edit(time.Now().Format(constants.DateFormat))
 			if err != nil {
 				util.PrintErrAndExit(err.Error())

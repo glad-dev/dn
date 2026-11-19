@@ -13,7 +13,7 @@ func CreateDir() error {
 	}
 
 	// Creates the note directory if it does not yet exist
-	err = os.Mkdir(path, 0o755)
+	err = os.Mkdir(path, 0o700)
 	if err != nil && !os.IsExist(err) {
 		return fmt.Errorf("failed to create note directory at '%s': %w", path, err)
 	}

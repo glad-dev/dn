@@ -29,6 +29,8 @@ func Search(needle string, caseSensitive bool) error {
 			continue
 		}
 
+		//nolint:gosec
+		// Name comes from os.ReadDir(config.BasePath()).
 		contentByte, err := os.ReadFile(filepath.Join(path, file.Name()))
 		if err != nil {
 			fmt.Printf("Warning: Reading the content of %s failed: %s\n", file.Name(), err)

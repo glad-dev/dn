@@ -17,7 +17,7 @@ func newCmdToday() *cobra.Command {
 		Short:   "Display today's notes.",
 		Example: "dn today",
 		Args:    cobra.ExactArgs(0),
-		Run: func(_ *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, _ []string) {
 			err := note.View(time.Now().Format(constants.DateFormat))
 			if err != nil {
 				util.PrintErrAndExit(err.Error())

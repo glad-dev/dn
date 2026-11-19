@@ -96,6 +96,6 @@ func argToBool(arg string) (bool, error) {
 	case "false", "0":
 		return false, nil
 	default:
-		return false, fmt.Errorf("Invalid boolean value. Expected 'true' or 'false', got '%s'", arg)
+		return false, fmt.Errorf("invalid boolean value. Expected 'true' or 'false', got '%s'", arg)
 	}
 }

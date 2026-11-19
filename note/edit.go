@@ -18,6 +18,8 @@ func Edit(fileName string) error {
 	filePath := filepath.Join(path, fileName)
 
 	// Check if file exists
+	//nolint:gosec
+	// fileName is a formated date or empty.
 	f, err := os.Open(filePath)
 	if os.IsNotExist(err) {
 		return fmt.Errorf("no note for the date '%s' exists", fileName)
@@ -29,6 +31,8 @@ func Edit(fileName string) error {
 		editor = "vim"
 	}
 
+	//nolint:gosec
+	// Running the user's $EDITOR is intended.
 	cmd := exec.Command(editor, filePath)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout

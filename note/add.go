@@ -16,13 +16,18 @@ func Add(content string, date string) error {
 	}
 
 	fullPath := filepath.Join(path, date)
+
+	//nolint:gosec
+	// date is a formated date or empty.
 	file, err := os.OpenFile(fullPath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0o600)
 	if err != nil {
 		return fmt.Errorf("failed to open note: %w", err)
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		_ = file.Close()
+	}(file)
 
-	_, err = file.WriteString(fmt.Sprintf("* %s\n", content))
+	_, err = fmt.Fprintf(file, "* %s\n", content)
 	if err != nil {
 		return fmt.Errorf("failed to write note: %w", err)
 	}
